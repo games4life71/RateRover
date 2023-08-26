@@ -1,5 +1,6 @@
 package Navigation;
 
+import MIsc.Review;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -40,8 +41,9 @@ public class altexNav extends AbstractNavigator {
     }
 
     @Override
-    public void extractReviews() throws IOException {
+    public List<Review> extractReviews() throws IOException {
         //TODO implement this method
 
+        return null;
     }
 }

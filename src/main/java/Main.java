@@ -1,3 +1,5 @@
+import MIsc.ProductInfo;
+import MIsc.Review;
 import Navigation.altexNav;
 import Navigation.emagNav;
 
@@ -9,19 +11,21 @@ import java.util.List;
 
 public class Main {
 
-    public  static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
 
-        ArrayList<String> keywords = new ArrayList<String>(List.of("telefoane ieftine"));
+        ArrayList<String> keywords = new ArrayList<String>(List.of("telefoane"));
 
-          emagNav emag = new emagNav("https://www.emag.ro",keywords);
-          emag.navigateTo();
+        emagNav emag = new emagNav("https://www.emag.ro", keywords);
+        emag.navigateTo();
+        List<Review> reviews = new ArrayList<Review>();
+        reviews.addAll(emag.extractReviews());
+        ProductInfo productInfo = new ProductInfo();
+        productInfo.setReviews(reviews);
 
-          altexNav altex = new altexNav("https://altex.ro",keywords);
-          altex.navigateTo();
+//          altexNav altex = new altexNav("https://altex.ro",keywords);
+//          altex.navigateTo();
     }
-
-
 
 
 }
