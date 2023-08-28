@@ -32,10 +32,13 @@ public class emagNav extends AbstractNavigator {
         Dictionary<Integer, Integer> Stars = new Hashtable<Integer, Integer>();
 
         for (WebElement number : numbers) {
+            // for each number get the rating and the number of reviews
             Integer rating = number.getText().charAt(0) - '0';
 //            System.out.println(rating);
+
             Integer count = Integer.parseInt(number.getText().substring(number.getText().indexOf("(") + 1, number.getText().indexOf(")")));
 //            System.out.println(count);
+            //add the rating and the number of reviews to the dictionary
             Stars.put(rating, count);
 
         }
@@ -74,7 +77,7 @@ public class emagNav extends AbstractNavigator {
 
                         String text = ratingText
                                 .findElement(By.className("review-body-container")).getText();
-                        System.out.println("The text is" + text);
+                        System.out.println("The text is " + text);
 
 
                         //get the number of stars

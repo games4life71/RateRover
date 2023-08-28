@@ -16,15 +16,19 @@ public class Main {
 
         ArrayList<String> keywords = new ArrayList<String>(List.of("telefoane"));
 
-        emagNav emag = new emagNav("https://www.emag.ro", keywords);
-        emag.navigateTo();
-        List<Review> reviews = new ArrayList<Review>();
-        reviews.addAll(emag.extractReviews());
-        ProductInfo productInfo = new ProductInfo();
-        productInfo.setReviews(reviews);
+//        emagNav emag = new emagNav("https://www.emag.ro", keywords);
+//        emag.navigateTo();
+//        List<Review> reviews = new ArrayList<Review>();
+//        reviews.addAll(emag.extractReviews());
+//        ProductInfo productInfo = new ProductInfo();
+//        productInfo.setReviews(reviews);
 
-//          altexNav altex = new altexNav("https://altex.ro",keywords);
-//          altex.navigateTo();
+          altexNav altex = new altexNav("https://altex.ro",keywords);
+          altex.navigateTo();
+          altex.extractReviews();
+
+
+
     }
 
 
