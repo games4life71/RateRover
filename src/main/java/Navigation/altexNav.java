@@ -1,16 +1,13 @@
 package Navigation;
 
 import MIsc.Review;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.time.Duration;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 public class altexNav extends AbstractNavigator {
 
@@ -49,7 +46,7 @@ public class altexNav extends AbstractNavigator {
 
         driver = new ChromeDriver();
         driver.get(url.toString());
-        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         //navigate to the reviews section
         WebElement ratings = driver.findElement(By.xpath("//*[@id=\"reviews\"]/div[2]/div/div/div[1]"))
@@ -59,7 +56,7 @@ public class altexNav extends AbstractNavigator {
         String text = ratings.getText();
 
         //put the stars and numbers of reviews in a dictionary
-        Dictionary<Integer, Integer> Stars = new Hashtable<Integer, Integer>();
+        Map<Integer, Integer> Stars = new HashMap<>();
 
         //transform the text into a string array for easy access
         String[] arrOfStr = text.split("\n");
@@ -73,8 +70,94 @@ public class altexNav extends AbstractNavigator {
         }
 
         System.out.println(Stars);
+
+        //wait
+        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(200));
+
+        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
+
+
+        String textWithNumberOfPages = driver
+                .findElement(By.className("Toolbar"))
+                .findElement(By.tagName("nav"))
+                .getText();
+
+        String[] array = textWithNumberOfPages.split("\n");
+
+        Integer numberOfPages = Integer.valueOf(array[array.length - 1]);
+
+
+        System.out.println("Number of pages: " + numberOfPages);
+
+        //list of reviews for the given product
+        List<Review> reviews = new ArrayList<>();
+
+        for (int i = 0; i < numberOfPages ; i++) {
+            //find the li of reviews
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
+            Integer numberOfList = driver.findElement(By.className("pb-8"))
+                    .findElement(By.xpath("//*[@id=\"reviews\"]/div[2]/div/div/ul"))
+                    .findElements(By.tagName("li"))
+                    .size();
+
+
+            List<WebElement> listOfReviews = driver.findElement(By.className("pb-8"))
+                    .findElement(By.xpath("//*[@id=\"reviews\"]/div[2]/div/div/ul"))
+                    .findElements(By.tagName("li"));
+
+            System.out.println("Number of reviews per page: " + numberOfList);
+
+
+            for (WebElement item : listOfReviews) {
+                String title = item.findElement(By.tagName("h3")).getText();
+                System.out.println("The title is: " + title);
+
+                //if the buying is verified by altex
+                boolean isVerified = false;
+                if (item.getText().contains("Achizitie verificata")) {
+                    isVerified = true;
+                }
+
+                String ratingText = item.findElement(By.className("break-words")).findElement(By.tagName("p")).getText();
+                System.out.println("The text is: " + ratingText);
+
+                //get the number of stars
+                //go to where the stars are in the <li> attribute
+                List<WebElement> stars = item.findElement(By.className("md:flex")).findElement(By.className("flex")).findElements(By.tagName("svg"));
+                Integer numberOfStars = 0;
+                //iterate through each svg and see if it is yellow
+                for (WebElement star : stars) {
+                    if (star.getAttribute("class").contains("text-yellow")) {
+                        numberOfStars++;
+                    }
+                }
+                System.out.println("The number of stars is: " + numberOfStars);
+
+                //add this review to the list of reviews
+                reviews.add(new Review(numberOfStars, title, ratingText, isVerified));
+
+
+            }
+
+            //go to the next page
+//                WebElement nextPage = driver.findElement(By.className("Toolbar"))
+//                    .findElement(By.className("flex"))
+//                    .findElement(By.xpath("//*[@id=\"reviews\"]/div[2]/div/div/div[4]/div/div/div/button[2]"));
+//                nextPage.click();
+
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].click();", driver.findElement(By.className("Toolbar"))
+                    .findElement(By.xpath("//*[@id=\"reviews\"]/div[2]/div/div/div[4]/div/div/div/button[2]")));
+
+            System.out.println("The number of page: " + (i+1));
+            System.out.println("\n");
+
+
+        }
+
         //close the driver
-        driver.close();
+        //driver.close();
 
         return null;
     }

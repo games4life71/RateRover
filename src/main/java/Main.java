@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
 
 
-        ArrayList<String> keywords = new ArrayList<String>(List.of("telefoane"));
+        ArrayList<String> keywords = new ArrayList<String>(List.of("iphone 12"));
 
 //        emagNav emag = new emagNav("https://www.emag.ro", keywords);
 //        emag.navigateTo();
